@@ -1,0 +1,77 @@
+---
+- name: install apache httpd
+  hosts: nodes
+ 
+  tasks:
+  - name: installing apache package (httpd)
+    yum:
+      name: httpd
+      state: present # latest
+
+  - name: ensure httpd is running
+    systemd: # 
+      name: httpd
+      state: started
+      enabled: yes # systemd
+
+  # - name: colleting service facts
+  #   service_facts:
+
+  # - name: checking httpd status
+  #   debug:
+  #     var: ansible_facts.services['httpd.service']
+
+  - name: running firewalld service
+    service:
+      name: firewalld
+      state: started
+
+  - name: opening services for web access
+#    become: yes
+    firewalld:
+      service: "{{ item }}"
+      permanent: true
+      state: enabled
+    with_items:
+      - http
+      - https
+#    notify: restart firewalld
+
+  - name: opening ports for web access  
+    firewalld:
+      port: "{{ item }}"
+      permanent: true
+      state: enabled
+    with_items:
+      - 80/tcp
+      - 443/tcp
+#    notify: restart firewalld
+
+  - name: restarting the firewalld service to apply firewall changes
+    become: yes
+    service: 
+      name: firewalld 
+      state: restarted
+
+  - name: creating index file
+    copy:
+      content: "\"Welcome to my webserver\""
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: '0644'
+
+  - name: stopping NetworkManager
+    service:
+      name: NetworkManager
+      state: stopped
+
+  - name: changing GRUB configuration
+    lineinfile:
+      path: /etc/default/grub
+      regexp: '^GRUB_CMDLINE_LINUX'
+      line: 'GRUB_CMDLINE_LINUX="no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto net.ifnames=0 biosdevname=0"'
+
+
+  - name: make GRUB configuration
+    command: grub2-mkconfig

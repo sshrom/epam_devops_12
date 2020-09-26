@@ -1,0 +1,36 @@
+- name: uninstall httpd
+  hosts: nodes
+
+  tasks:
+  - name: uninstalling apache httpd
+    yum:
+      name: httpd
+      state: absent
+
+  - name: deleting index file
+    file:
+      path: /var/www/html/index.html
+      state: absent
+
+  - name: disabling service for web access
+    firewalld:
+      service: "{{ item }}"
+      permanent: yes
+      state: disabled
+    with_items:
+    - http
+    - https
+
+  - name: closing ports for web access
+    firewalld:
+      port: "{{ item }}"
+      permanent: yes
+      state: disabled
+    with_items:
+    - 80/tcp
+    - 443/tcp
+
+  - name: reloading firewalld
+    service:
+      name: firewalld
+      state: reloaded
