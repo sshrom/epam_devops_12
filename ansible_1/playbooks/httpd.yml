@@ -35,7 +35,7 @@
     with_items:
       - http
       - https
-#    notify: restart firewalld
+    notify: restart firewalld
 
   - name: opening ports for web access  
     firewalld:
@@ -45,13 +45,7 @@
     with_items:
       - 80/tcp
       - 443/tcp
-#    notify: restart firewalld
-
-  - name: restarting the firewalld service to apply firewall changes
-    become: yes
-    service: 
-      name: firewalld 
-      state: restarted
+    notify: restart firewalld
 
   - name: creating index file
     copy:
@@ -71,7 +65,13 @@
       path: /etc/default/grub
       regexp: '^GRUB_CMDLINE_LINUX'
       line: 'GRUB_CMDLINE_LINUX="no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto net.ifnames=0 biosdevname=0"'
+    notify: restart grub
 
-
-  - name: make GRUB configuration
+  handlers:
+  - name: restart grub
     command: grub2-mkconfig
+  
+  - name: restart firewalld
+    service: 
+      name: firewalld 
+      state: restarted
