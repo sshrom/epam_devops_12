@@ -1,0 +1,11 @@
+---
+  - name: installing apache package (httpd)
+    yum:
+      name: httpd
+      state: present # latest
+
+  - name: ensure httpd is running
+    service: # 
+      name: httpd
+      state: started
+      enabled: yes # systemd

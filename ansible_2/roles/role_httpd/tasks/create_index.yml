@@ -1,0 +1,7 @@
+  - name: creating index file
+    copy:
+      content: "\"Welcome to my webserver\""
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: '0644'

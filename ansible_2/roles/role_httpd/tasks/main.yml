@@ -1,0 +1,14 @@
+# tasks file for ansible-2
+- name: Show information about "env" of this host
+  debug:
+    msg: "### This host is in {{ env }} environment! ###"
+
+- name: include tasks
+  include_tasks: "{{ outer_item }}"
+  loop:
+    - install_httpd.yml
+    - firewalld.yml
+    - create_index.yml
+ # Fixing: The loop variable 'item' is already in use. You should set the `loop_var` value in the `loop_control` option 
+  loop_control:
+    loop_var: outer_item  

@@ -1,0 +1,10 @@
+---
+- name: install apache httpd
+  hosts: nodes
+  become: true
+
+  roles:
+    - role: role_httpd
+
+...
+

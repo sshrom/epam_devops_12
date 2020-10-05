@@ -1,0 +1,4 @@
+---
+# defaults file for ansible-2
+port_http: 80/tcp
+port_https: 443/tcp
