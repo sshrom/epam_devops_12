@@ -1,2 +1,38 @@
 ---
 # tasks file for role_vsftpd
+  - name: Show information about "env" of this host
+    debug:
+      msg: "### This host is in {{ env }} environment! ###"
+  
+  - name: install vsftpd
+    yum:
+      name: vsftpd
+      state: present
+    notify: start ftp
+
+  - name: running firewalld service
+    service:
+      name: firewalld
+      state: started
+
+  - name: opening services for access
+#    become: yes
+    firewalld:
+      service: ftp
+      permanent: true
+      state: enabled
+    notify: restart firewalld
+
+  - name: opening ports for access
+    firewalld:
+      port: "{{ port_ftp }}"
+      permanent: true
+      state: enabled
+    notify: restart firewalld
+
+  - name: jinja2 config
+    template:
+      src: vsftpd.j2
+      dest: /etc/vsftpd/vsftpd.conf
+    notify: restart ftp
+    

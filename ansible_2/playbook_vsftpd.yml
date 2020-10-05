@@ -1,0 +1,9 @@
+---
+- name: install ftp
+  hosts: nodes
+  become: true
+
+  roles:
+    - role: role_vsftpd
+
+...

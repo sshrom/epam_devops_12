@@ -5,6 +5,7 @@ ansible-playbook -i ./environments/prod/inventory playbook_httpd.yml
 
 # Ansible-2 - Role
 Задания:
+
 №1
 Вот из этого плейбука (без Grub и NM) из первой домашки:
     "1. Создайте плэйбук, выполняющий установку веб-сервера Apache на

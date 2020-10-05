@@ -1,2 +1,5 @@
 ---
 # defaults file for role_vsftpd
+port_ftp: 21/tcp
+
+
