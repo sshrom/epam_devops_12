@@ -14,7 +14,7 @@
       state: started
       enabled: yes # systemd
 
-  # - name: colleting service facts
+  # - name: collecting service facts
   #   service_facts:
 
   # - name: checking httpd status
