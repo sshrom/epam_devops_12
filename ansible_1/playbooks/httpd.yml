@@ -60,6 +60,7 @@
       name: NetworkManager
       state: stopped
 
+# probably it's better use "replace" module, but task is to use "lineinfile"
   - name: changing GRUB configuration
     lineinfile:
       path: /etc/default/grub
